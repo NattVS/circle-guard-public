@@ -1,0 +1,202 @@
+#identity 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: circleguard-identity-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identity-service
+  template:
+    metadata:
+      labels:
+        app: identity-service
+    spec:
+      containers:
+        - name: identity-service
+          image: circleguard/circleguard-identity-service:latest
+          ports:
+            - containerPort: 8083
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity-service
+spec:
+  selector:
+    app: identity-service
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 8083
+
+---
+#auth
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: circleguard-auth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+        - name: auth-service
+          image: circleguard/circleguard-auth-service:latest
+          ports:
+            - containerPort: 8180
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  selector:
+    app: auth-service
+  ports:
+    - protocol: TCP
+      port: 8180
+      targetPort: 8180
+
+---
+#dashboard
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: circleguard-dashboard-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard-service
+  template:
+    metadata:
+      labels:
+        app: dashboard-service
+    spec:
+      containers:
+        - name: dashboard-service
+          image: circleguard/circleguard-dashboard-service:latest
+          ports:
+            - containerPort: 8084
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-service
+spec:
+  selector:
+    app: dashboard-service
+  ports:
+    - protocol: TCP
+      port: 8084
+      targetPort: 8084
+
+---
+#file
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: circleguard-file-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-service
+  template:
+    metadata:
+      labels:
+        app: file-service
+    spec:
+      containers:
+        - name: file-service
+          image: circleguard/circleguard-file-service:latest
+          ports:
+            - containerPort: 8085
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: file-service
+spec:
+  selector:
+    app: file-service
+  ports:
+    - protocol: TCP
+      port: 8085
+      targetPort: 8085
+
+---
+#form
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: circleguard-form-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: form-service
+  template:
+    metadata:
+      labels:
+        app: form-service
+    spec:
+      containers:
+        - name: form-service
+          image: circleguard/circleguard-form-service:latest
+          ports:
+            - containerPort: 8086
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: form-service
+spec:
+  selector:
+    app: form-service
+  ports:
+    - protocol: TCP
+      port: 8086
+      targetPort: 8086
+
+---
+#gateway
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: circleguard-gateway-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-service
+  template:
+    metadata:
+      labels:
+        app: gateway-service
+    spec:
+      containers:
+        - name: gateway-service
+          image: circleguard/circleguard-gateway-service:latest
+          ports:
+            - containerPort: 8087
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-service
+spec:
+  selector:
+    app: gateway-service
+  ports:
+    - protocol: TCP
+      port: 8087
+      targetPort: 8087
