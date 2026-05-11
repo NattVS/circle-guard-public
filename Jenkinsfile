@@ -1,47 +1,115 @@
+def targetServices = [
+    'circleguard-auth-service',
+    'circleguard-identity-service',
+    'circleguard-dashboard-service',
+    'circleguard-file-service',
+    'circleguard-form-service',
+    'circleguard-gateway-service'
+]
+
 pipeline {
     agent any
+
     environment {
-        SERVICE_NAME = 'circleguard-identity-service'
-        DOCKER_IMAGE = "circleguard/${SERVICE_NAME}"
-        DOCKER_TAG = "dev-${env.BUILD_ID}"
+        DOCKER_ORG = "circleguard"
     }
+
     stages {
-        stage('Checkout') {
+        stage('Source Checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Build & Unit Tests') {
-            steps {
-                sh './gradlew :${SERVICE_NAME}:clean :${SERVICE_NAME}:test --tests "*Unit*"'
-            }
-        }
-        stage('Integration Tests') {
-            steps {
-                sh './gradlew :${SERVICE_NAME}:test --tests "*IntegrationTest*"'
-            }
-        }
-        stage('Code Quality (SonarQube)') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh './gradlew :${SERVICE_NAME}:sonar'
-                }
-            }
-        }
-        stage('Docker Build') {
+
+        stage('Compile and Test Suite') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}", "-f ${SERVICE_NAME}/Dockerfile .")
+                    for (String svc : targetServices) {
+                        echo "Executing build and tests for ${svc}"
+                        sh "./gradlew :services:${svc}:clean :services:${svc}:build"
+                    }
+                }
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true, testResults: 'services/**/build/test-results/test/*.xml'
                 }
             }
         }
-        stage('Deploy to K8s (Dev)') {
+
+        stage('Containerization') {
             steps {
-                sh """
-                kubectl set image deployment/${SERVICE_NAME} \
-                ${SERVICE_NAME}=${DOCKER_IMAGE}:${DOCKER_TAG} -n dev-environment
-                """
+                script {
+                    for (String svc : targetServices) {
+                        echo "Building Docker image for ${svc}"
+                        sh "docker build -t ${DOCKER_ORG}/${svc}:latest -f services/${svc}/Dockerfile ."
+                    }
+                }
             }
+        }
+
+        stage('Dev Environment Deployment') {
+            when {
+                allOf {
+                    not { branch 'master' }
+                    not { branch 'main' }
+                    not { branch 'stage' }
+                }
+            }
+            steps {
+                sh "kubectl apply -f k8s/ --namespace=dev-environment"
+            }
+        }
+
+        stage('Stage Environment & Performance') {
+            when {
+                branch 'stage'
+            }
+            steps {
+                sh "kubectl apply -f k8s/ --namespace=stage-environment"
+                
+                script {
+                    echo "Executing Performance Tests with Locust in Stage"
+                    sh """
+                    docker run --rm \
+                      -e URL_IDENTITY=http://circleguard-identity-service.stage-environment:8083 \
+                      -e URL_AUTH=http://circleguard-auth-service.stage-environment:8081 \
+                      -e URL_DASHBOARD=http://circleguard-dashboard-service.stage-environment:8084 \
+                      -e URL_FILE=http://circleguard-file-service.stage-environment:8085 \
+                      -e URL_FORM=http://circleguard-form-service.stage-environment:8086 \
+                      -e URL_GATEWAY=http://circleguard-gateway-service.stage-environment:8087 \
+                      -v \${PWD}/test:/mnt/locust locustio/locust -f /mnt/locust/locustfile.py \
+                      --headless -u 50 -r 10 -t 1m
+                    """
+                }
+            }
+        }
+
+        stage('Master Deployment & Change Management') {
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'main'
+                }
+            }
+            steps {
+                sh "kubectl apply -f k8s/ --namespace=master-environment"
+                
+                echo "Generating Release Notes"
+                sh "echo 'Release Notes - Automated Generation' > release-notes.txt"
+                sh "git log -15 --oneline >> release-notes.txt"
+                
+                archiveArtifacts artifacts: 'release-notes.txt', followSymlinks: false
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo "Pipeline execution completed successfully."
+        }
+        failure {
+            echo "Pipeline execution failed. Please check the logs."
         }
     }
 }
