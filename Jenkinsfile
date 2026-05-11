@@ -39,7 +39,9 @@ pipeline {
                 script {
                     for (String svc : targetServices) {
                         echo "Building Docker image for ${svc}"
-                        sh "docker build -t ${DOCKER_ORG}/${svc}:latest -f services/${svc}/Dockerfile ."
+                        dir("services/${svc}") {
+                            sh "docker build -t ${DOCKER_ORG}/${svc}:latest ."
+                        }
                     }
                 }
             }
