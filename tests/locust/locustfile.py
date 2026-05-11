@@ -13,7 +13,7 @@ class CampusLoadTestSimulator(HttpUser):
         self.common_headers = {"Content-Type": "application/json"}
         self.services = {
             "identity": os.environ.get("URL_IDENTITY", "http://localhost:8083"),
-            "auth": os.environ.get("URL_AUTH", "http://localhost:8081"),
+            "auth": os.environ.get("URL_AUTH", "http://localhost:8180"),
             "dashboard": os.environ.get("URL_DASHBOARD", "http://localhost:8084"),
             "file": os.environ.get("URL_FILE", "http://localhost:8085"),
             "form": os.environ.get("URL_FORM", "http://localhost:8086"),
@@ -36,11 +36,12 @@ class CampusLoadTestSimulator(HttpUser):
     @task(3)
     def simulate_auth_flow(self):
         target = f"{self.services['auth']}/api/v1/auth/login"
-        payload = {"username": "student", "password": "pwd"}
+        payload = {"username": "admin", "password": "password"}
         
         with self.client.post(target, json=payload, headers=self.common_headers, catch_response=True, name="2. Auth: Login Attempt") as response:
             if response.status_code in (200, 401, 403):
                 response.success()
+
 
     @task(2)
     def simulate_dashboard_query(self):
@@ -52,21 +53,58 @@ class CampusLoadTestSimulator(HttpUser):
 
     @task(3)
     def simulate_form_submission(self):
-        target = f"{self.services['form']}/api/v1/forms/health-survey"
-        payload = {"symptoms_reported": False}
-        
-        with self.client.post(target, json=payload, headers=self.common_headers, catch_response=True, name="4. Form: Health Survey") as response:
-            if response.status_code in (200, 201, 400):
+        form_service = self.services.get(
+            "form",
+            "http://host.docker.internal:8086"
+        )
+
+        body = {
+            "anonymousId": "00000000-0000-0000-0000-000000000001",
+            "responses": {
+                "q1": "YES"
+            }
+        }
+
+        with self.client.post(
+            url=f"{form_service}/api/v1/surveys",
+            json=body,
+            headers=self.common_headers,
+            catch_response=True,
+            name="4. Form: Health Survey"
+        ) as response:
+
+            if response.status_code in (200, 201, 202):
                 response.success()
+            else:
+                response.failure(
+                    f"Survey rejected ({response.status_code})"
+                )
 
     @task(5)
     def simulate_gateway_checkin(self):
-        target = f"{self.services['gateway']}/api/v1/gateway/scan"
-        payload = {"qr_payload": "dummy-token-123"}
-        
-        with self.client.post(target, json=payload, headers=self.common_headers, catch_response=True, name="5. Gateway: QR Scan") as response:
+        gateway_service = self.services.get(
+            "gateway",
+            "http://host.docker.internal:8087"
+        )
+
+        qr_data = {
+            "token": "test-token"
+        }
+
+        with self.client.post(
+            url=f"{gateway_service}/api/v1/gate/validate",
+            json=qr_data,
+            headers=self.common_headers,
+            catch_response=True,
+            name="5. Gateway: QR Scan"
+        ) as response:
+
             if response.status_code in (200, 401, 403):
                 response.success()
+            else:
+                response.failure(
+                    f"Gateway validation failed ({response.status_code})"
+                )
 
     @task(1)
     def simulate_file_download(self):
