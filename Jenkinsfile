@@ -103,7 +103,13 @@ users:
                 
                 script {
                     echo "Executing Performance Tests with Locust in Stage"
-                    sh """
+                    
+                    sh '''
+                    echo "FROM locustio/locust" > Dockerfile.locust
+                    echo "COPY test/locustfile.py /locustfile.py" >> Dockerfile.locust
+                    
+                    docker build -t test-locust-image -f Dockerfile.locust .
+                    
                     docker run --rm \
                       -e URL_IDENTITY=http://host.docker.internal:8083 \
                       -e URL_AUTH=http://host.docker.internal:8081 \
@@ -111,9 +117,8 @@ users:
                       -e URL_FILE=http://host.docker.internal:8085 \
                       -e URL_FORM=http://host.docker.internal:8086 \
                       -e URL_GATEWAY=http://host.docker.internal:8087 \
-                      -v \${PWD}/test:/mnt/locust locustio/locust -f /mnt/locust/locustfile.py \
-                      --headless -u 50 -r 10 -t 1m
-                    """
+                      test-locust-image -f /locustfile.py --headless -u 50 -r 10 -t 1m
+                    '''
                 }
             }
         }
