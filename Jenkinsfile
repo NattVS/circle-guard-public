@@ -106,7 +106,7 @@ users:
                     
                     sh '''
                     echo "FROM locustio/locust" > Dockerfile.locust
-                    echo "COPY tests/locustfile.py /locustfile.py" >> Dockerfile.locust
+                    echo "COPY tests/locust/locustfile.py /locustfile.py" >> Dockerfile.locust
                     
                     docker build -t test-locust-image -f Dockerfile.locust .
                     
