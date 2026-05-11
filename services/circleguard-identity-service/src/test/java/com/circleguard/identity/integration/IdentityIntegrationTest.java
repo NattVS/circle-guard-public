@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Testcontainers
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class IdentityIntegrationTest {
 
     @Container

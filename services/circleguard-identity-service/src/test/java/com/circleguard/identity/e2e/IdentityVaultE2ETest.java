@@ -15,6 +15,7 @@ import java.util.UUID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
 class IdentityVaultE2ETest {
 
