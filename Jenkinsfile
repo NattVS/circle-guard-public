@@ -76,8 +76,6 @@ users:
     client-key-data: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBc1RiUVpkMTBhZmV5TVVoandacDhoQU94Y0MzYWtPWlNwY1czR3kyK2c0ek1qY0FSCnBJUmd2cTlnbnJqV2pxOTk1MVJlTFVaTGIzREloVDF4QUEvYy9rYlpOZml6eHVDZGtTNU1lbng0cWVPdlZXVE8KRWE3aFdmTTd5dkVhS09BZTBlOE8vR3dycEZSTEF4UnBpUmVSZ2IxN2E2VFZwVTlGL1d3bXNtdzJvc1cxOWQxZApVSjQ0ZWFOYVg4RG9Jb21Ia3dKN1ZkdkRvZFhTSnpMUE5QYlpsN1FaMUdhaEYzSkdLYTVMLzU3QzBud0ZlVzZzCjMwYWM3ZUNnMWZFQWUzclR4a2RMWE01bitpQW8zYTV2dTBSTktRWVlTV2ZyMXBNS2tsd3MxSkVKL1E4U1lyUW4KQUQza2FmSXcyZEl5QXZJRDZWMCtGM0pybVpvcXViQWQ1VFdQTVFJREFRQUJBb0lCQUdlWUduVWg0eGE3TkpDNAp0NUFLcGpWcUQwVDdtU1JSY0FqMkxwY1Z3NlFWSDlMUmI3N1RuOVo0b1N2SDg2MFBpN002VDU5NTAway9EZ2xOCnBJd2J1ZDF2UHpUY3dRTkdkUFhVc2VKOGR2RWhaM0tzN2dYS1RIUVB5MmxVVGkyTTdwZGNmMDh5VU1UTWZkazgKQ29HWXBIZktjNmEyZ2lvVDBGOVg1THN5cFRHN0ZtN3RoajhPWlZITzcxYkJ1clRTSkg3Z1RrZW8wYkFoT0ZOQworbGVuNFZuWlRqQWlTeExDMTJQZENNZ280TFN4M3o4VzJ6NmpPNS90YWpDc05CTEhqVUMxOXlJZFhWNC9zWWhuCk1wNkJQZFdla1F6NGtHclpRV2V2TXc2OU9vRE1JbkFPeE43YlpwSmJJRXhwcEgxanRIeForaFdES0pNd0V2MysKcE8wUmtCRUNnWUVBNVgxWEFUWEloVjZoeXg4dUo3WjhwdXpTei9HK1VWSGRGVjdEL1EybkgyZWxGcGdrOE4yego5Qk5Zb28yd1pZM2t6b1JNZ3dqQzNFOFNhRmF2UVdrNEp6VFFUMFlMV21hUjczYmdBRDErRVRsTDhSeDhrUVVkCnRCMG54U042Vm9rUHcza0d6eGY3SE5rVkU1TVpQbEJhR1d6VjViU2JDZzNFR0ZDS2k4N2R4YTBDZ1lFQXhhK0sKRDM4cHUxei9VZkJZeTFMY0Rqd1U1Sis3aDlZQXZWZE5VQU91UW5xUGJoWTJQWTgzSnkwcUtkZGh3SzVpcHpzNgpnczY2RE1NdEhxN3dJNUI1dUxIUHh6blI0bG9rWDZtM2N1R1N3S2JReElRODFaZmt6c2J2MElCeWhva1dya3ljCm1UQVBETld2YkpIZEdtRmlSM1lvVW5aaWtDTjZCOTJuRFNDd3VCVUNnWUJYaUJBNGVQQXIxcVYxbVVYOGhjRlQKMWY2dXEvRkFpUzMvYWE3dGhWaWFST2tXRGlBQTh6OGhPSVBWTkovMGpFT2FkYUhOVlBrbUdNN1hsMEN2ZlZlYQp0SzFEbjE3VE0wNDBmUzRCU1hNZFZMSmZtOUx6YVhVajd2N3RWWlBqRDlKQVo1Z3VRMkpYWllHQmZ0amhDTHJrCiticzRLMFA3ZUxhejQzeUV5UG1UM1FLQmdRQzBCWXhEV25rRmI4WHV0MklWSG9yWXg2djdHdDhxN3g1VFRvcFEKUUZuVG5rcTVaSzdXVm5KU1VkWGdyb3dOYklEWWE1NTMrb3dCRFVnc2RnQ25VbTBXWFk2cWphUHRia3RMZG9GaApzN3Z4aHJmOURiTmNpMnRKUm02alFDV0xFSkkvL2ZKcHFoTTZpK21waEJlR2E0S1ZNeXU3RktYalB2dGs2RnUxCkg3enVsUUtCZ1FDUHBxT0cyWXJKWDYrbVh4NGtha0R5TkNsQ0ozTWhpKzVwQWY5ejI5T0RibFlkWlUwa3RMalcKSmw4ZU12WVUzdUdNdWl0a0VhWlhPRjFteDh1Uk4zcXpKVm1sL3FjWWJtVWhGcVo3VWlTcS95ZFhCanhxOWh1dwozQ2QrdzJMU1RHT05HelI5WXJEWmhJQzhhOEovcU1BdTlqRnhOZ3Y5akZ1c1BVU0RUNS85OEE9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
 """
                     writeFile file: 'kubeconfig.yaml', text: kubeConfigContent
-                    
-                    // Esta es la línea que soluciona el error de los caracteres de Windows
                     sh "sed -i 's/\\r//g' kubeconfig.yaml"
                 }
             }
@@ -85,10 +83,8 @@ users:
 
         stage('Dev Environment Deployment') {
             when {
-                allOf {
-                    not { branch 'master' }
-                    not { branch 'main' }
-                    not { branch 'stage' }
+                expression { 
+                    env.GIT_BRANCH == null || (!env.GIT_BRANCH.contains('dev') && !env.GIT_BRANCH.contains('main'))
                 }
             }
             steps {
@@ -98,7 +94,9 @@ users:
 
         stage('Stage Environment & Performance') {
             when {
-                branch 'stage'
+                expression { 
+                    env.GIT_BRANCH != null && env.GIT_BRANCH.contains('stage') 
+                }
             }
             steps {
                 sh "./kubectl --kubeconfig=kubeconfig.yaml apply -f k8s/ --namespace=stage-environment"
@@ -122,9 +120,8 @@ users:
 
         stage('Master Deployment & Change Management') {
             when {
-                anyOf {
-                    branch 'master'
-                    branch 'main'
+                expression { 
+                    env.GIT_BRANCH != null && (env.GIT_BRANCH.contains('master') || env.GIT_BRANCH.contains('main')) 
                 }
             }
             steps {
